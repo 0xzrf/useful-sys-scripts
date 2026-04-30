@@ -13,26 +13,14 @@ int convert_bits_to_decimal(const char *arg);
 int convert_hex_to_decimal(const char *arg);
 int starts_with(const char *arg, const char *prefix);
 int return_decimal(const char *arg);
+void check_sign_flag(const char *sign, char *sign_flag);
 
 // a script that helps you do arithmatic on either of hex, decimals or bits
 int main(int argc, char *argv[]) {
   const char *sign = argv[2];
   char is_signed = 0;
 
-  if (starts_with(sign, "--")) {
-    if (starts_with(sign, "--signed")) {
-      is_signed = 1;
-    } else if (starts_with(sign, "--unsigned")) {
-      is_signed = 0;
-    } else {
-      printf("Invalid value provided for signed. only [--signed | --unsigned ] "
-             "allowed");
-      exit(ERR_EXIT_CODE);
-    }
-  } else {
-    printf("The sign should start with --");
-    exit(ERR_EXIT_CODE);
-  }
+  check_sign_flag(sign, &is_signed);
 
   const char *left_operand = argv[3];
   const char *right_operand = argv[4];
@@ -57,4 +45,21 @@ int convert_hex_to_decimal(const char *arg) {}
 int starts_with(const char *arg, const char *prefix) {
   size_t n = strlen(prefix);
   return strncmp(arg, prefix, n) == 0;
+}
+
+void check_sign_flag(const char *sign, char *sign_flag) {
+  if (starts_with(sign, "--")) {
+    if (starts_with(sign, "--signed")) {
+      *sign_flag = 1;
+    } else if (starts_with(sign, "--unsigned")) {
+      *sign_flag = 0;
+    } else {
+      printf("Invalid value provided for signed. only [--signed | --unsigned ] "
+             "allowed");
+      exit(ERR_EXIT_CODE);
+    }
+  } else {
+    printf("The sign should start with --");
+    exit(ERR_EXIT_CODE);
+  }
 }
